@@ -1,30 +1,18 @@
-# Base image
-FROM python:3.12.5
+# Use Python 3.12.5 as a parent image
+FROM python:3.12.5-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-# Set work directory
+# Set the working directory in the container
 WORKDIR /app
 
 # Install dependencies
-RUN apt-get update && apt-get install -y gcc libpq-dev
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Python dependencies
-COPY requirements.txt /app/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Copy the current directory contents into the container
+COPY . .
 
-# Copy project files
-COPY . /app/
-
-# Run Django commands to collect static files, apply migrations, etc.
-RUN python manage.py collectstatic --noinput
-RUN python manage.py migrate
-
-# Expose the port that Django will run on
+# Expose the port that Django uses
 EXPOSE 8000
 
-# Command to run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "CBAPIView.wsgi:application"]
+# Command to run the Django development server
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
