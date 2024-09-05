@@ -27,7 +27,7 @@ urlpatterns = [
    #  path('students_update/<int:pk>/', views.StudentUpdate.as_view()),
     path('students_update/<int:pk>/', views.StudentUpdate.as_view(), name='student-update'),
     path('students_destroy/<int:pk>/', views.StudentDestroy.as_view()),
-    path('students_list_create/', views.StudentListCreate.as_view()),
+   #  path('students_list_create/', views.StudentListCreate.as_view()),
     #path('students_search/', views.StudentSearch.as_view()),
     path('students/search/', views.StudentSearchView.as_view(), name='student-search'),
    #  path('student_retrieve_update/<int:pk>/', views.StudentRetrieveUpdate.as_view()),
