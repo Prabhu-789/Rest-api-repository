@@ -21,27 +21,27 @@ class StudentList(ListAPIView):
     """
     View to retrieve a list of all students.
     """
-
-    serializer_class = StudentSerializer  # Define the serializer class
+    serializer_class = StudentSerializer
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.student_service = StudentService()
 
     def get_queryset(self):
-        # This method is required by DRF's ListAPIView, but we override the actual retrieval.
+        # Correctly define the queryset
         return self.student_service.queryset
 
     @swagger_auto_schema(operation_description="Retrieve a list of all the students present in the table")
     def get(self, request, *args, **kwargs):
-        # Use the service to get the list of students
         students = self.student_service.get_all_students()
-        return Response(students)
+        return Response(students, status=status.HTTP_200_OK)
+
 
 class StudentCreate(CreateAPIView):
     """
     View to create a new student entry.
     """
+    serializer_class = StudentSerializer
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -55,12 +55,11 @@ class StudentCreate(CreateAPIView):
     )
     def post(self, request, *args, **kwargs):
         try:
-            # Use the service to create a student
             student = self.student_service.create_student(request.data)
             return Response(StudentSerializer(student).data, status=status.HTTP_201_CREATED)
         except ValidationError as e:
-            # Handle validation errors by returning a 400 response with the error details
             return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+
 
 class StudentRetrieve(RetrieveAPIView):
     """
@@ -90,7 +89,6 @@ class StudentUpdate(APIView):
     """
     View to update a student entry by ID.
     """
-
     serializer_class = StudentSerializer
 
     def __init__(self, **kwargs):
@@ -112,6 +110,7 @@ class StudentUpdate(APIView):
             return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
         except NotFound as e:
             return Response({"detail": str(e)}, status=status.HTTP_404_NOT_FOUND)
+
 
 class StudentDestroy(DestroyAPIView):
     """

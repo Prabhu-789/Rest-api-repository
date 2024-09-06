@@ -83,22 +83,27 @@ WSGI_APPLICATION = 'CBAPIView.wsgi.application'
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': 'postgres',
 #         'USER': 'postgres',
-#         'PASSWORD' :'Teja@1234',
-#         'HOST':'db',
-#         'PORT':'5432'
+#         'PASSWORD': 'Teja@1234',
+#         'HOST': 'localhost',  # 'localhost' because PostgreSQL is running on the same host
+#         'PORT': '5430',
 #     }
-    
 # }
+
+import os
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'Teja@1234'),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),  # Should match the service name defined in docker-compose.yml
+        'PORT': os.getenv('DB_PORT', '5430')
     }
 }
+
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
 
 
 
@@ -149,3 +154,6 @@ REST_FRAMEWORK = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+ALLOWED_HOSTS = ['*']  # This allows all hosts; adjust for production!
+

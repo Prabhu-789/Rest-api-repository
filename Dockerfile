@@ -1,18 +1,23 @@
-# Use Python 3.12.5 as a parent image
-FROM python:3.12.5-slim
+# Use the official Python image as a base image
+FROM python:3.12-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
 # Set the working directory in the container
 WORKDIR /app
 
 # Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt /app/
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
 
-# Copy the current directory contents into the container
-COPY . .
+# Copy the Django project into the container
+COPY . /app/
 
-# Expose the port that Django uses
-EXPOSE 8000
+# Set entrypoint
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
-# Command to run the Django development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+ENTRYPOINT ["/app/entrypoint.sh"]
