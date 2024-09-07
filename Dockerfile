@@ -6,18 +6,18 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Set the working directory in the container
-WORKDIR /app
+
 
 # Install dependencies
-COPY requirements.txt /app/
+COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copy the Django project into the container
-COPY . /app/
+COPY . .
 
 # Set entrypoint
-COPY ./entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY ./entrypoint.sh .
+RUN chmod +x entrypoint.sh
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]

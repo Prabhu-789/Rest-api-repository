@@ -78,29 +78,29 @@ WSGI_APPLICATION = 'CBAPIView.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Teja@1234',
-#         'HOST': 'localhost',  # 'localhost' because PostgreSQL is running on the same host
-#         'PORT': '5430',
-#     }
-# }
-
-import os
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'postgres'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'Teja@1234'),
-        'HOST': os.getenv('DB_HOST', '127.0.0.1'),  # Should match the service name defined in docker-compose.yml
-        'PORT': os.getenv('DB_PORT', '5430')
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'Teja@1234',
+        'HOST': 'localhost',  # 'localhost' because PostgreSQL is running on the same host
+        'PORT': '5432',
     }
 }
+
+import os
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('DB_NAME', 'postgres'),
+#         'USER': os.getenv('DB_USER', 'postgres'),
+#         'PASSWORD': os.getenv('DB_PASSWORD', 'Teja@1234'),
+#         'HOST': os.getenv('DB_HOST', '127.0.0.1'),  # Should match the service name defined in docker-compose.yml
+#         'PORT': os.getenv('DB_PORT', '5430')
+#     }
+# }
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')

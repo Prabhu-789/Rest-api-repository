@@ -21,27 +21,27 @@ class StudentList(ListAPIView):
     """
     View to retrieve a list of all students.
     """
-    serializer_class = StudentSerializer
+
+    serializer_class = StudentSerializer  # Define the serializer class
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.student_service = StudentService()
 
     def get_queryset(self):
-        # Correctly define the queryset
+        # This method is required by DRF's ListAPIView, but we override the actual retrieval.
         return self.student_service.queryset
 
     @swagger_auto_schema(operation_description="Retrieve a list of all the students present in the table")
     def get(self, request, *args, **kwargs):
+        # Use the service to get the list of students
         students = self.student_service.get_all_students()
-        return Response(students, status=status.HTTP_200_OK)
-
+        return Response(students)
 
 class StudentCreate(CreateAPIView):
     """
     View to create a new student entry.
     """
-    serializer_class = StudentSerializer
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -55,11 +55,12 @@ class StudentCreate(CreateAPIView):
     )
     def post(self, request, *args, **kwargs):
         try:
+            # Use the service to create a student
             student = self.student_service.create_student(request.data)
             return Response(StudentSerializer(student).data, status=status.HTTP_201_CREATED)
         except ValidationError as e:
+            # Handle validation errors by returning a 400 response with the error details
             return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
-
 
 class StudentRetrieve(RetrieveAPIView):
     """
@@ -89,6 +90,7 @@ class StudentUpdate(APIView):
     """
     View to update a student entry by ID.
     """
+
     serializer_class = StudentSerializer
 
     def __init__(self, **kwargs):
@@ -110,7 +112,6 @@ class StudentUpdate(APIView):
             return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
         except NotFound as e:
             return Response({"detail": str(e)}, status=status.HTTP_404_NOT_FOUND)
-
 
 class StudentDestroy(DestroyAPIView):
     """
@@ -136,41 +137,41 @@ class StudentDestroy(DestroyAPIView):
         except NotFound as e:
             return Response({"detail": str(e)}, status=status.HTTP_404_NOT_FOUND)
     
-# class StudentListCreate(ListCreateAPIView):
-#     queryset = Student.objects.all()
-#     serializer_class = StudentSerializer
-#     # filter_backends = [SearchFilter]  # Adding SearchFilter for search functionality
-#     # search_fields = ['name', 'city','roll']  # Specify fields that are searchable
+class StudentListCreate(ListCreateAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    # filter_backends = [SearchFilter]  # Adding SearchFilter for search functionality
+    # search_fields = ['name', 'city','roll']  # Specify fields that are searchable
 
-#     # @swagger_auto_schema(
-#     #     operation_description="Retrieve a list of all students or create a new student entry",
-#     #     manual_parameters=[
-#     #         openapi.Parameter(
-#     #             'search',
-#     #             openapi.IN_QUERY,
-#     #             description="Search by name or city",
-#     #             type=openapi.TYPE_STRING
-#     #         ),
-#     #         openapi.Parameter(
-#     #             'page',
-#     #             openapi.IN_QUERY,
-#     #             description="Page number for pagination",
-#     #             type=openapi.TYPE_INTEGER
-#     #         )
-#     #     ]
-#     # )
-#     def get(self, request, *args, **kwargs):
-#         # Handles GET requests with optional search functionality
-#         return super().get(request, *args, **kwargs)
+    # @swagger_auto_schema(
+    #     operation_description="Retrieve a list of all students or create a new student entry",
+    #     manual_parameters=[
+    #         openapi.Parameter(
+    #             'search',
+    #             openapi.IN_QUERY,
+    #             description="Search by name or city",
+    #             type=openapi.TYPE_STRING
+    #         ),
+    #         openapi.Parameter(
+    #             'page',
+    #             openapi.IN_QUERY,
+    #             description="Page number for pagination",
+    #             type=openapi.TYPE_INTEGER
+    #         )
+    #     ]
+    # )
+    def get(self, request, *args, **kwargs):
+        # Handles GET requests with optional search functionality
+        return super().get(request, *args, **kwargs)
 
-#     @swagger_auto_schema(
-#         operation_description="Create a new student entry or search for students dynamically",
-#         responses={201: StudentSerializer, 400: 'Bad Request'},
-#     )
-#     # @swagger_auto_schema(operation_description="Create a new student entry")
-#     def post(self, request, *args, **kwargs):
-#         # Handles POST requests for creating new student records
-#         return super().post(request, *args, **kwargs)
+    @swagger_auto_schema(
+        operation_description="Create a new student entry or search for students dynamically",
+        responses={201: StudentSerializer, 400: 'Bad Request'},
+    )
+    # @swagger_auto_schema(operation_description="Create a new student entry")
+    def post(self, request, *args, **kwargs):
+        # Handles POST requests for creating new student records
+        return super().post(request, *args, **kwargs)
     
 
 # class StudentRetrieveUpdate(RetrieveUpdateAPIView):
