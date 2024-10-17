@@ -4,3 +4,8 @@ drf_yasg
 psycopg2-binary
 gunicorn
 setuptools  
+
+
+
+
+

@@ -1,18 +1,23 @@
-version: '3.9'
 
 services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Teja@1234
+      POSTGRES_DB: postgres
+    networks:
+      - mynetwork
+
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn your_project_name.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
-    ports:
-      - "8000:8000"
-    env_file:
-      - .env
+    depends_on:
+      - db
     networks:
-      - default
+      - mynetwork
 
 networks:
-  default: 
- 
+  mynetwork:

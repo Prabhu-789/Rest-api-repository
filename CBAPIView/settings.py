@@ -89,7 +89,7 @@ DATABASES = {
     }
 }
 
-import os
+# import os
 
 # DATABASES = {
 #     'default': {
@@ -156,4 +156,3 @@ REST_FRAMEWORK = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ALLOWED_HOSTS = ['*']  # This allows all hosts; adjust for production!
-
